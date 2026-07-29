@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atten Paws Rescue Organization</title>
+  <style>
+    :root {
+      --primary: #2d6a4f;
+      --primary-hover: #1b4332;
+      --accent: #e76f51;
+      --accent-hover: #d65a3b;
+      --bg-light: #f8f9fa;
+      --text-dark: #2b2d42;
+      --text-muted: #6c757d;
+      --border-color: #dee2e6;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    html { scroll-behavior: smooth; }
+    body { color: var(--text-dark); background-color: #fff; line-height: 1.6; }
+
+    /* Navigation */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 5%;
+      background: #fff;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+    nav a { margin-left: 1.5rem; text-decoration: none; color: var(--text-dark); font-weight: 500; }
+    nav a:hover { color: var(--primary); }
+    .btn-nav { background: var(--accent); color: white !important; padding: 0.5rem 1rem; border-radius: 20px; transition: 0.2s; }
+    .btn-nav:hover { background: var(--accent-hover); }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1200&q=80') center/cover;
+      color: white;
+      text-align: center;
+      padding: 6rem 1rem;
+    }
+    .hero h1 { font-size: 3rem; margin-bottom: 1rem; }
+    .hero p { font-size: 1.25rem; max-width: 600px; margin: 0 auto 2rem; }
+    .btn { display: inline-block; padding: 0.8rem 1.8rem; border-radius: 25px; text-decoration: none; font-weight: 600; margin: 0.5rem; cursor: pointer; border: none; font-size: 1rem; transition: 0.2s; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-secondary { background: white; color: var(--text-dark); }
+
+    /* Stats Bar */
+    .stats { display: flex; justify-content: space-around; background: var(--primary); color: white; padding: 2rem 5%; text-align: center; flex-wrap: wrap; gap: 1rem; }
+    .stat-item h2 { font-size: 2.2rem; }
+
+    /* General Sections */
+    .section { padding: 4rem 5%; text-align: center; }
+    .section-title { font-size: 2rem; margin-bottom: 0.5rem; color: var(--primary); }
+    .section-subtitle { color: var(--text-muted); margin-bottom: 2.5rem; }
+
+    /* Adoptable Dogs Grid */
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+    .card { background: var(--bg-light); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: left; display: flex; flex-direction: column; }
+    .card img { width: 100%; height: 220px; object-fit: cover; }
+    .card-body { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .card-title { font-size: 1.3rem; margin-bottom: 0.5rem; }
+    .card-meta { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem; }
+
+    /* Interactive Application Form Section */
+    .form-container {
+      max-width: 750px;
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 2.5rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      text-align: left;
+    }
+    
+    .type-toggle {
+      display: flex;
+      background: var(--bg-light);
+      border-radius: 30px;
+      padding: 4px;
+      margin-bottom: 2rem;
+    }
+    .toggle-btn {
+      flex: 1;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 25px;
+      background: transparent;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .toggle-btn.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+    }
+    .full-width { grid-column: span 2; }
+
+    .form-group { display: flex; flex-direction: column; }
+    .form-group label { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--text-dark); }
+    .form-group input, .form-group select, .form-group textarea {
+      padding: 0.8rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: var(--primary);
+    }
+
+    /* Modal / Success Dialog */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-box {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 16px;
+      text-align: center;
+      max-width: 450px;
+      width: 90%;
+      animation: popIn 0.3s ease;
+    }
+    @keyframes popIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    @media (max-width: 600px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .full-width { grid-column: span 1; }
+    }
+
+    /* Footer */
+    footer { background: #111; color: #aaa; text-align: center; padding: 2rem; margin-top: 3rem; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="#" class="logo">🐾 Atten Paws Rescue</a>
+    <nav>
+      <a href="#adopt">Adopt</a>
+      <a href="#apply">Apply Form</a>
+      <a href="#donate" class="btn-nav">Donate</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>Every Paw Deserves a Forever Home</h1>
+    <p>Atten Paws Rescue is dedicated to rescuing, rehabilitating, and rehoming dogs in need.</p>
+    <a href="#adopt" class="btn btn-primary">Meet Our Dogs</a>
+    <a href="#apply" class="btn btn-secondary">Submit Application</a>
+  </section>
+
+  <div class="stats">
+    <div class="stat-item">
+      <h2>450+</h2>
+      <p>Dogs Rescued</p>
+    </div>
+    <div class="stat-item">
+      <h2>410+</h2>
+      <p>Adoptions Completed</p>
+    </div>
+    <div class="stat-item">
+      <h2>100%</h2>
+      <p>Health Checked & Neutered</p>
+    </div>
+  </div>
+
+  <!-- Adoptable Dogs -->
+  <section class="section" id="adopt">
+    <h2 class="section-title">Ready for Adoption</h2>
+    <p class="section-subtitle">Click "Apply" on any dog to automatically select them in the form below.</p>
+    <div class="cards-grid">
+      
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=600&q=80" alt="Barnaby">
+        <div class="card-body">
+          <div>
+            <h3 class="card-title">Barnaby</h3>
+            <p class="card-meta">2 Years • Male • Golden Retriever Mix</p>
+            <p>Energetic, loves playing fetch, and gets along great with kids and other dogs!</p>
+          </div>
+          <br>
+          <button onclick="selectPet('Barnaby')" class="btn btn-primary" style="width:100%;">Apply for Barnaby</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=600&q=80" alt="Luna">
+        <div class="card-body">
+          <div>
+            <h3 class="card-title">Luna</h3>
+            <p class="card-meta">1 Year • Female • Beagle Mix</p>
+            <p>Gentle, loves long walks, and is looking for a peaceful home to cuddle in.</p>
+          </div>
+          <br>
+          <button onclick="selectPet('Luna')" class="btn btn-primary" style="width:100%;">Apply for Luna</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=600&q=80" alt="Buster">
+        <div class="card-body">
+          <div>
+            <h3 class="card-title">Buster</h3>
+            <p class="card-meta">4 Years • Male • Terrier Mix</p>
+            <p>A professional lap dog! Fully house-trained and ready for couch movie nights.</p>
+          </div>
+          <br>
+          <button onclick="selectPet('Buster')" class="btn btn-primary" style="width:100%;">Apply for Buster</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Interactive Application Form Section -->
+  <section class="section" id="apply" style="background-color: var(--bg-light);">
+    <h2 class="section-title">Application Portal</h2>
+    <p class="section-subtitle">Whether adopting or fostering, start your journey here.</p>
+    
+    <div class="form-container">
+      
+      <!-- Type Switcher -->
+      <div class="type-toggle">
+        <button id="toggle-adopt" class="toggle-btn active" onclick="setAppType('Adoption')">Adoption Application</button>
+        <button id="toggle-foster" class="toggle-btn" onclick="setAppType('Foster')">Foster Application</button>
+      </div>
+
+      <form id="rescue-application" onsubmit="handleFormSubmit(event)">
+        <div class="form-grid">
+          
+          <div class="form-group">
+            <label for="first-name">First Name *</label>
+            <input type="text" id="first-name" required placeholder="Jane">
+          </div>
+
+          <div class="form-group">
+            <label for="last-name">Last Name *</label>
+            <input type="text" id="last-name" required placeholder="Doe">
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address *</label>
+            <input type="email" id="email" required placeholder="jane@example.com">
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone Number *</label>
+            <input type="tel" id="phone" required placeholder="(555) 000-0000">
+          </div>
+
+          <!-- Dynamic Field: Target Pet -->
+          <div class="form-group full-width" id="pet-select-group">
+            <label for="target-pet">Dog Interested In *</label>
+            <select id="target-pet" required>
+              <option value="">-- Select a Dog --</option>
+              <option value="Barnaby">Barnaby (Golden Retriever Mix)</option>
+              <option value="Luna">Luna (Beagle Mix)</option>
+              <option value="Buster">Buster (Terrier Mix)</option>
+              <option value="General Interest">No preference / First available</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="housing-type">Housing Type *</label>
+            <select id="housing-type" required>
+              <option value="">-- Select Option --</option>
+              <option value="Single Family Home">Single Family Home</option>
+              <option value="Apartment">Apartment / Condo</option>
+              <option value="Townhouse">Townhouse</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="fenced-yard">Fenced Yard? *</label>
+            <select id="fenced-yard" required>
+              <option value="">-- Select Option --</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="experience">Tell us about your home environment & dog experience *</label>
+            <textarea id="experience" rows="4" required placeholder="Do you have other pets? Work schedule? Previous dog experience?"></textarea>
+          </div>
+
+          <div class="form-group full-width">
+            <button type="submit" class="btn btn-primary" id="submit-btn" style="width: 100%; border-radius: 8px; padding: 1rem;">
+              Submit Adoption Application
+            </button>
+          </div>
+
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Success Modal -->
+  <div class="modal-overlay" id="success-modal">
+    <div class="modal-box">
+      <h2 style="color: var(--primary); margin-bottom: 0.5rem;">🐾 Application Received!</h2>
+      <p id="modal-text">Thank you for submitting your application to Atten Paws Rescue. Our team will review your details and get in touch within 24–48 hours.</p>
+      <br>
+      <button onclick="closeModal()" class="btn btn-primary">Back to Home</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Atten Paws Rescue Organization. All rights reserved.</p>
+  </footer>
+
+  <script>
+    let currentAppType = 'Adoption';
+
+    function setAppType(type) {
+      currentAppType = type;
+      const toggleAdopt = document.getElementById('toggle-adopt');
+      const toggleFoster = document.getElementById('toggle-foster');
+      const submitBtn = document.getElementById('submit-btn');
+      const petGroup = document.getElementById('pet-select-group');
+
+      if (type === 'Adoption') {
+        toggleAdopt.classList.add('active');
+        toggleFoster.classList.remove('active');
+        submitBtn.innerText = 'Submit Adoption Application';
+        petGroup.style.display = 'flex';
+      } else {
+        toggleFoster.classList.add('active');
+        toggleAdopt.classList.remove('active');
+        submitBtn.innerText = 'Submit Foster Application';
+        // Foster applications are often general
+        document.getElementById('target-pet').value = 'General Interest';
+      }
+    }
+
+    function selectPet(petName) {
+      setAppType('Adoption');
+      document.getElementById('target-pet').value = petName;
+      document.getElementById('apply').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('first-name').value;
+      const modalText = document.getElementById('modal-text');
+      
+      modalText.innerText = `Thank you, ${name}! Your ${currentAppType.toLowerCase()} application has been submitted successfully. Our coordinators will review your details and reach out within 24–48 hours.`;
+      
+      document.getElementById('success-modal').style.display = 'flex';
+      document.getElementById('rescue-application').reset();
+      setAppType('Adoption');
+    }
+
+    function closeModal() {
+      document.getElementById('success-modal').style.display = 'none';
+    }
+  </script>
+
+</body>
+</html>
